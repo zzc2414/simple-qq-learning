@@ -1,0 +1,18 @@
+# 编译生成的目标文件
+*.o
+
+# qmake 生成的文件
+Makefile
+.qmake.stash
+
+# 生成的可执行程序
+helloqt
+
+# Qt 自动生成的文件
+moc_*.cpp
+moc_*.o
+ui_*.h
+qrc_*.cpp
+
+# Qt Creator 用户配置
+*.pro.user
