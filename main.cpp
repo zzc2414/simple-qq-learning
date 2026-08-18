@@ -16,6 +16,13 @@ int main(int argc, char *argv[])
     window.setWindowTitle("My First Qt");
     window.resize(400, 250);
 
+    QWidget mainWindow;
+    mainWindow.setWindowTitle("Simple QQ");
+    mainWindow.resize(500, 400);
+
+    QLabel *welcomeLabel = new QLabel("Welcome, admin", &mainWindow);
+    welcomeLabel->setGeometry(30, 30, 200, 30);
+
     QLabel *userLabel = new QLabel("Username:", &window);
     userLabel->setGeometry(70, 50, 80, 30);
 
@@ -67,6 +74,7 @@ int main(int argc, char *argv[])
         &QPushButton::clicked,
         &window,
         [userEdit, passwordEdit, button, messageLabel, lockTimer,
+         &window, &mainWindow,
          &errorCount, &remainingSeconds]()
         {
             QString username = userEdit->text();
@@ -101,6 +109,8 @@ int main(int argc, char *argv[])
             {
                 messageLabel->setText("Login success");
                 errorCount = 0;
+                mainWindow.show();
+                window.hide();
             }
         }
     );
