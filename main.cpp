@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QTimer>
+#include <QListWidget>
 #include <QDebug>
 
 int main(int argc, char *argv[])
@@ -22,6 +23,15 @@ int main(int argc, char *argv[])
 
     QLabel *welcomeLabel = new QLabel("Welcome, admin", &mainWindow);
     welcomeLabel->setGeometry(30, 30, 200, 30);
+
+    QLabel *friendsLabel = new QLabel("Friends", &mainWindow);
+    friendsLabel->setGeometry(30, 75, 200, 30);
+
+    QListWidget *friendList = new QListWidget(&mainWindow);
+    friendList->setGeometry(30, 110, 220, 230);
+    friendList->addItem("Alice");
+    friendList->addItem("Bob");
+    friendList->addItem("Charlie");
 
     QLabel *userLabel = new QLabel("Username:", &window);
     userLabel->setGeometry(70, 50, 80, 30);
