@@ -3,11 +3,13 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QLineEdit>
+#include <QTimer>
 #include <QDebug>
 
 int main(int argc, char *argv[])
 {
     int errorCount = 0;
+    int remainingSeconds = 0;
     QApplication app(argc, argv);
 
     QWidget window;
@@ -33,11 +35,39 @@ int main(int argc, char *argv[])
     QLabel *messageLabel = new QLabel("", &window);
     messageLabel->setGeometry(70, 200, 260, 30);
 
+    QTimer *lockTimer = new QTimer(&window);
+    lockTimer->setInterval(1000);
+
+    QObject::connect(
+        lockTimer,
+        &QTimer::timeout,
+        &window,
+        [button, messageLabel, lockTimer, &errorCount, &remainingSeconds]()
+        {
+            remainingSeconds--;
+
+            if (remainingSeconds <= 0)
+            {
+                lockTimer->stop();
+                button->setEnabled(true);
+                errorCount = 0;
+                messageLabel->setText("Login unlocked. Please try again");
+            }
+            else
+            {
+                messageLabel->setText(
+                    QString("Locked: %1 seconds remaining").arg(remainingSeconds)
+                );
+            }
+        }
+    );
+
     QObject::connect(
         button,
         &QPushButton::clicked,
         &window,
-        [userEdit, passwordEdit, messageLabel, &errorCount]()
+        [userEdit, passwordEdit, button, messageLabel, lockTimer,
+         &errorCount, &remainingSeconds]()
         {
             QString username = userEdit->text();
             QString password = passwordEdit->text();
@@ -61,9 +91,10 @@ int main(int argc, char *argv[])
 
                 if (errorCount >= 3)
                 {
-                    messageLabel->setText(
-                        "Password entered incorrectly 3 times"
-                    );
+                    remainingSeconds = 60;
+                    button->setEnabled(false);
+                    messageLabel->setText("Locked: 60 seconds remaining");
+                    lockTimer->start();
                 }
             }
             else
